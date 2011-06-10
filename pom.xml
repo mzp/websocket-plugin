@@ -25,4 +25,12 @@
       <url>http://maven.glassfish.org/content/groups/public/</url>
     </pluginRepository>
   </pluginRepositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.webbitserver</groupId>
+      <artifactId>webbit</artifactId>
+      <version>0.1.13</version>
+    </dependency>
+  </dependencies>
 </project>
