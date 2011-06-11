@@ -10,12 +10,20 @@ import net.sf.json.JSONObject;
 
 
 public class WsServer implements WebSocketHandler {
-    @Initializer(before=InitMilestone.COMPLETED)
-    public static void init() throws IOException {
+    private static WebServer webServer = null;
+
+    public static void reset(int port) throws IOException {
         System.out.println("start websocket server");
-        WebServer webServer = WebServers.createWebServer(8081)
+        if(webServer){
+            webServer.stop();
+        }
+        webServer = WebServers.createWebServer(port)
             .add("/jenkins", new WsServer())
             .start();
+    }
+
+    public static void reset() throws IOException {
+        reset(8081);
     }
 
     static private CopyOnWriteArrayList<WebSocketConnection> connections = new CopyOnWriteArrayList<WebSocketConnection>();
