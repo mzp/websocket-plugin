@@ -1,0 +1,9 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:section title="Websocket Notifier">
+    <f:entry title="Port"
+      description="Port number of Websocket server"
+      help="/plugin/wsnotifier/help-globalConfig.html">
+      <f:textbox name="port" value="${descriptor.port()}" />
+    </f:entry>
+  </f:section>
+</j:jelly>

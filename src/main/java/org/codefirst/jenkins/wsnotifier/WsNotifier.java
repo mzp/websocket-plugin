@@ -36,6 +36,9 @@ public class WsNotifier extends Notifier {
 
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.
     public static final class DescriptorImpl extends BuildStepDescriptor<Publisher> {
+        private int port = 8081;
+
+        public int port(){ return port; }
         public boolean isApplicable(Class<? extends AbstractProject> aClass) {
             // Indicates that this builder can be used with all kinds of project types
             return true;
@@ -47,8 +50,9 @@ public class WsNotifier extends Notifier {
 
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
+            port = formData.getInt("port");
+            save();
             return super.configure(req,formData);
         }
     }
 }
-
