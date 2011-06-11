@@ -2,9 +2,7 @@ package org.codefirst.jenkins.wsnotifier;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
-import hudson.model.AbstractBuild;
-import hudson.model.BuildListener;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.tasks.*;
 import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -52,6 +50,7 @@ public class WsNotifier extends Notifier {
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             port = formData.getInt("port");
             save();
+            WsServer.reset(port);
             return super.configure(req,formData);
         }
     }

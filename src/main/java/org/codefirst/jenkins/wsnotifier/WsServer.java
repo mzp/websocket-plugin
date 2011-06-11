@@ -3,18 +3,25 @@ package org.codefirst.jenkins.wsnotifier;
 import hudson.init.Initializer;
 import hudson.init.InitMilestone;
 import hudson.model.AbstractBuild;
+import hudson.model.Descriptor;
 import java.io.IOException;
 import org.webbitserver.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import net.sf.json.JSONObject;
-
+import hudson.model.*;
 
 public class WsServer implements WebSocketHandler {
     private static WebServer webServer = null;
 
-    public static void reset(int port) throws IOException {
+    @Initializer(before=InitMilestone.COMPLETED)
+    public static void init() throws IOException {
+        WsNotifier.DescriptorImpl desc = Hudson.getInstance().getDescriptorByType(WsNotifier.DescriptorImpl.class);
+        reset(desc.port());
+    }
+
+    synchronized public static void reset(int port) throws IOException {
         System.out.println("start websocket server");
-        if(webServer){
+        if(webServer != null){
             webServer.stop();
         }
         webServer = WebServers.createWebServer(port)
