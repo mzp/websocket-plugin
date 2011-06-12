@@ -12,28 +12,34 @@ import hudson.model.*;
 
 public class WsServer implements WebSocketHandler {
     private static WebServer webServer = null;
+    private static CopyOnWriteArrayList<WebSocketConnection> connections =
+        new CopyOnWriteArrayList<WebSocketConnection>();
 
     @Initializer(before=InitMilestone.COMPLETED)
-    public static void init() throws IOException {
-        WsNotifier.DescriptorImpl desc = Hudson.getInstance().getDescriptorByType(WsNotifier.DescriptorImpl.class);
+    public static void init() {
+        WsNotifier.DescriptorImpl desc =
+            Hudson.getInstance().getDescriptorByType(WsNotifier.DescriptorImpl.class);
         reset(desc.port());
     }
 
-    synchronized public static void reset(int port) throws IOException {
-        System.out.println("start websocket server");
-        if(webServer != null){
-            webServer.stop();
+    synchronized public static void reset(int port) {
+        try {
+            System.out.println("stopping web server");
+            if(webServer != null){
+                for(WebSocketConnection con : connections){
+                    con.close();
+                }
+                connections.clear();
+                webServer.stop();
+            }
+            System.out.println("start websocket server at " + port);
+            webServer = WebServers.createWebServer(port)
+                .add("/jenkins", new WsServer())
+                .start();
+        } catch( IOException ex){
+            throw new RuntimeException(ex);
         }
-        webServer = WebServers.createWebServer(port)
-            .add("/jenkins", new WsServer())
-            .start();
     }
-
-    public static void reset() throws IOException {
-        reset(8081);
-    }
-
-    static private CopyOnWriteArrayList<WebSocketConnection> connections = new CopyOnWriteArrayList<WebSocketConnection>();
     static public void send(AbstractBuild build){
         String json = new JSONObject()
             .element("project", build.getProject().getName())
