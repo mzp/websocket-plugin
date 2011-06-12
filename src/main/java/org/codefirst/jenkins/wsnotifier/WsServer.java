@@ -19,7 +19,11 @@ public class WsServer implements WebSocketHandler {
     public static void init() {
         WsNotifier.DescriptorImpl desc =
             Hudson.getInstance().getDescriptorByType(WsNotifier.DescriptorImpl.class);
-        reset(desc.port());
+        if(desc != null) {
+            reset(desc.port());
+        }else{
+            reset(8081);
+        }
     }
 
     synchronized public static void reset(int port) {
