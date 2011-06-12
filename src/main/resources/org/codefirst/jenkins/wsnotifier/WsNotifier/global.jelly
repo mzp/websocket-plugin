@@ -2,8 +2,7 @@
   <f:section title="Websocket Notifier">
     <f:entry title="Port"
       field="port"
-      description="Port number of Websocket server"
-      help="/plugin/wsnotifier/help-globalConfig.html">
+      description="Port number of Websocket server">
       <f:textbox default="${descriptor.port()}" />
     </f:entry>
   </f:section>
