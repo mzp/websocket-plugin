@@ -46,6 +46,16 @@ public class WsNotifier extends Notifier {
             return "Websocket Notifier";
         }
 
+        public FormValidation doCheckPort(@QueryParameter String value)
+            throws IOException, ServletException {
+            try{
+                Integer.parseInt(value);
+                return FormValidation.ok();
+            }catch(NumberFormatException ex){
+                return FormValidation.error("invalid port number");
+            }
+        }
+
         @Override
         public boolean configure(StaplerRequest req, JSONObject formData) throws FormException {
             port = formData.getInt("port");
