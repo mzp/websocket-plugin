@@ -1,0 +1,17 @@
+<html>
+  <body bgcolor="red" id="bg">
+    <script>
+      var elem = document.getElementById('bg');
+              console.log(elem);
+      var ws = new WebSocket('ws://dev.codefirst.org:8081/jenkins');
+      ws.onmessage = function(msg) {
+          eval('var obj = ' + msg.data);
+          if(obj.result == 'SUCCESS'){
+              elem.bgColor = 'green';
+          }else{
+              elem.bgColor = 'red';
+          }
+      };
+    </script>
+  </body>
+</html>
